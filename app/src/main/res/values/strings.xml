@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EmployeeManager</string>
+    <string name="add_employee">Add Employee</string>
+    <string name="profile_pic">Profile Picture</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_department">Enter Department</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_phone">Enter Phone</string>
+    <string name="save">Save</string>
+    <string name="more_options">More Options</string>
+</resources>
