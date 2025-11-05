@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EmployeeManager</string>
+    <string name="app_name">EMA</string>
     <string name="add_employee">Add Employee</string>
     <string name="profile_pic">Profile Picture</string>
     <string name="enter_name">Enter Name</string>
