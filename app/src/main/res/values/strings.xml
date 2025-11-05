@@ -8,4 +8,13 @@
     <string name="enter_phone">Enter Phone</string>
     <string name="save">Save</string>
     <string name="more_options">More Options</string>
+    <string name="employee_manager">Employee Manager</string>
+    <string name="manage_track_employees_easily"><![CDATA[Manage & track employees easily]]></string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="continue_without_account">Continue without account</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="department">Department</string>
+    <string name="employee_name">Employee Name</string>
 </resources>

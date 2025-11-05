@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,27 +13,30 @@
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EmployeeManagementApp">
-        <!-- Splash Screen -->
+        <activity
+            android:name=".registration.SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".registration.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".registration.WelcomeActivity"
+            android:exported="false" /> <!-- Splash Screen -->
         <activity
             android:name=".splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Main Activity -->
+        </activity> <!-- Main Activity -->
         <activity
             android:name=".ui.MainActivity"
-            android:exported="false" />
-
-        <!-- Add/Edit Employee -->
+            android:exported="false" /> <!-- Add/Edit Employee -->
         <activity
             android:name=".ui.AddEditEmployeeActivity"
-            android:exported="false" />
-
-        <!-- Employee Detail -->
+            android:exported="false" /> <!-- Employee Detail -->
         <activity
             android:name=".ui.EmployeeDetailActivity"
             android:exported="false" />
