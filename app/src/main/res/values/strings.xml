@@ -17,4 +17,22 @@
     <string name="email">Email</string>
     <string name="department">Department</string>
     <string name="employee_name">Employee Name</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="create">Create</string>
+    <string name="account">Account</string>
+    <string name="fill_your_information_below_or_register_with_your_social_account">Fill your information below or\nregister with your social account</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="or_signup_with">Or signup with</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="welcome_to_home_page">Welcome to Home Page</string>
+    <string name="back">Back</string>
+    <string name="we_missed_your_login_to_continue_your_journey_with_us">We missed your login to continue your journey with us</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="or_login_with">Or login with</string>
+    <string name="doesn_t_have_an_account">Doesn\'t have an account?</string>
+    <string name="welcome">Welcome</string>
 </resources>
