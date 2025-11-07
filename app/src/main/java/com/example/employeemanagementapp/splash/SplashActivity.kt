@@ -19,6 +19,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, WelcomeActivity::class.java)
             startActivity(intent)
             finish()
-        }, 1500) // 1.5 seconds delay
+        }, 1000) // 1 seconds delay
     }
 }

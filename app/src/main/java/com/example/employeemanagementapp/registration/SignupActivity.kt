@@ -27,7 +27,7 @@ class SignupActivity : AppCompatActivity() {
 
             if (!validateInput(name, email, password, confirmPassword)) return@setOnClickListener
 
-            // ✅ Save user in SharedPreferences
+            // Save to SharedPreferences
             val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
             sharedPref.edit().apply {
                 putString("name", name)
