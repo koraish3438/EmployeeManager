@@ -1,69 +1,61 @@
 package com.example.employeemanagementapp.viewmodel
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.CircleCropTransformation
-import com.example.employeemanagementapp.R
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.employeemanagementapp.data.Employee
-import com.example.employeemanagementapp.databinding.ItemEmployeeBinding
+import com.example.employeemanagementapp.data.EmployeeRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class EmployeeAdapter(
-    private val onItemClick: (Employee) -> Unit,
-    private val onEditClick: (Employee) -> Unit,
-    private val onDeleteClick: (Employee) -> Unit
-) : ListAdapter<Employee, EmployeeAdapter.EmployeeVH>(DiffCallback()) {
+class EmployeeViewModel(application: Application) : AndroidViewModel(application) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeVH {
-        val binding = ItemEmployeeBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return EmployeeVH(binding)
+    private val repository = EmployeeRepository(application)
+
+    private val _employees = MutableStateFlow<List<Employee>>(emptyList())
+    val employees: StateFlow<List<Employee>> get() = _employees
+
+    init {
+        // load initial data
+        refreshEmployees()
     }
 
-    override fun onBindViewHolder(holder: EmployeeVH, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    inner class EmployeeVH(private val binding: ItemEmployeeBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(emp: Employee) {
-            // Name & Department
-            binding.tvName.text = emp.name ?: "No Name"
-            binding.tvDepartment.text = emp.department ?: "No Department"
-
-            // Profile Image with null check
-            val imageUri = emp.imageUri
-            if (!imageUri.isNullOrEmpty()) {
-                binding.imgProfile.load(imageUri) {
-                    placeholder(R.drawable.outline_person_24)
-                    error(R.drawable.outline_person_24)
-                    crossfade(true)
-                    transformations(CircleCropTransformation())
-                }
-            } else {
-                binding.imgProfile.setImageResource(R.drawable.outline_person_24)
-            }
-
-            // Click listeners
-            binding.root.setOnClickListener { onItemClick(emp) }
-            binding.btnMore.setOnClickListener { onEditClick(emp) }
-            binding.root.setOnLongClickListener {
-                onDeleteClick(emp)
-                true
+    private fun refreshEmployees() {
+        viewModelScope.launch {
+            try {
+                val list = repository.getAllEmployees()
+                _employees.value = list
+            } catch (e: Exception) {
+                // optionally log error
+                _employees.value = emptyList()
             }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Employee>() {
-        override fun areItemsTheSame(oldItem: Employee, newItem: Employee) =
-            oldItem.id == newItem.id
+    fun addEmployee(employee: Employee) {
+        viewModelScope.launch {
+            repository.addEmployee(employee)
+            refreshEmployees()
+        }
+    }
 
-        override fun areContentsTheSame(oldItem: Employee, newItem: Employee) =
-            oldItem == newItem
+    fun updateEmployee(employee: Employee) {
+        viewModelScope.launch {
+            repository.updateEmployee(employee)
+            refreshEmployees()
+        }
+    }
+
+    fun deleteEmployee(employee: Employee) {
+        viewModelScope.launch {
+            repository.deleteEmployee(employee)
+            refreshEmployees()
+        }
+    }
+
+    // Suspend helper to fetch single employee directly (call from lifecycleScope)
+    suspend fun getEmployeeById(id: Int): Employee? {
+        return repository.getById(id)
     }
 }

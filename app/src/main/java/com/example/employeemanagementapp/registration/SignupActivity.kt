@@ -6,13 +6,11 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.databinding.ActivitySignupBinding
-import com.example.employeemanagementapp.ui.MainActivity
+import com.example.employeemanagementapp.ui.EmployeeListActivity
 
 class SignupActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivitySignupBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,51 +19,60 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         binding.regBtn.setOnClickListener {
             val name = binding.nameEditText.text.toString().trim()
             val email = binding.emailEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
             val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
 
-            if (name.isEmpty()) {
-                Toast.makeText(this, "Name required", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            if (!validateInput(name, email, password, confirmPassword)) return@setOnClickListener
 
-            if (email.isEmpty()) {
-                Toast.makeText(this, "Email required", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (password.length < 8) {
-                Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (confirmPassword != password) {
-                Toast.makeText(this, "Password not match", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            // ✅ Save user in SharedPreferences
+            val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
+            sharedPref.edit().apply {
+                putString("name", name)
+                putString("email", email)
+                putString("pass", password)
+                apply()
             }
 
             Toast.makeText(this, "Sign Up Successful!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, EmployeeListActivity::class.java)
+            intent.putExtra("userName", name)
             startActivity(intent)
-
+            finish()
         }
 
         binding.backWlc.setOnClickListener {
-            val intent = Intent(this, WelcomeActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
         }
 
         binding.cLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+    }
+
+    private fun validateInput(name: String, email: String, password: String, confirmPassword: String): Boolean {
+        when {
+            name.isEmpty() -> {
+                Toast.makeText(this, "Name required", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                Toast.makeText(this, "Valid email required", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            password.length < 8 -> {
+                Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            password != confirmPassword -> {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                return false
+            }
+            else -> return true
         }
     }
 }

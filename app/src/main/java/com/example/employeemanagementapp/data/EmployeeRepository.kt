@@ -1,25 +1,23 @@
 package com.example.employeemanagementapp.data
 
-import androidx.lifecycle.LiveData
+import android.app.Application
 
+class EmployeeRepository(application: Application) {
 
-class EmployeeRepository(private val dao: EmployeeDao) {
+    private val dao: EmployeeDao = EmployeeDatabase.getDatabase(application).employeeDao()
 
+    // Return a plain list (suspend) for ViewModel to populate StateFlow
+    suspend fun getAllEmployees(): List<Employee> = dao.getAllList()
 
-    val allEmployees: LiveData<List<Employee>> = dao.getAll()
+    suspend fun addEmployee(employee: Employee): Long = dao.insert(employee)
 
+    suspend fun updateEmployee(employee: Employee) = dao.update(employee)
 
-    fun search(query: String): LiveData<List<Employee>> = dao.search(query)
+    suspend fun deleteEmployee(employee: Employee) = dao.delete(employee)
 
+    suspend fun getById(id: Int): Employee? = dao.getById(id)
 
-    suspend fun insert(employee: Employee) = dao.insert(employee)
-
-
-    suspend fun update(employee: Employee) = dao.update(employee)
-
-
-    suspend fun delete(employee: Employee) = dao.delete(employee)
-
-
-    suspend fun getById(id: Int) = dao.getById(id)
+    // If other parts of app want LiveData search/all, we keep DAO LiveData methods available
+    fun getAllLiveData() = dao.getAll()
+    fun searchLiveData(query: String) = dao.search(query)
 }

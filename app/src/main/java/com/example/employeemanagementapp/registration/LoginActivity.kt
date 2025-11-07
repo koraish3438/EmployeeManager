@@ -6,19 +6,16 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.databinding.ActivityLoginBinding
-import com.example.employeemanagementapp.ui.MainActivity
+import com.example.employeemanagementapp.ui.EmployeeListActivity
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -28,21 +25,31 @@ class LoginActivity : AppCompatActivity() {
 
             if (!validateInput(email, password)) return@setOnClickListener
 
-            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, MainActivity::class.java))
+            // ✅ SharedPreferences check
+            val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
+            val savedEmail = sharedPref.getString("email", "")
+            val savedPass = sharedPref.getString("pass", "")
+
+            if (email == savedEmail && password == savedPass) {
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, EmployeeListActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.backLogin.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
         }
-
 
         binding.goToRegister.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
+            finish()
         }
     }
-
 
     private fun validateInput(email: String, password: String): Boolean {
         when {

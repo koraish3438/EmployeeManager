@@ -4,12 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.airbnb.lottie.LottieAnimationView
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.databinding.ActivityWelcomeBinding
-import com.example.employeemanagementapp.ui.MainActivity
+import com.example.employeemanagementapp.ui.EmployeeListActivity
 
 class WelcomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWelcomeBinding
@@ -36,14 +33,16 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Login Button click
         binding.btnLogin.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
         // Skip TextView click
-        binding.tvSkip.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+        binding.btnContinue.setOnClickListener {
+            val intent = Intent(this, EmployeeListActivity::class.java)
+            intent.putExtra("userName", "Guest")
             startActivity(intent)
+            finish()
         }
     }
 }

@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EmployeeManagementApp">
         <activity
+            android:name=".ui.EmployeeListActivity"
+            android:exported="false" />
+        <activity
             android:name=".registration.SignupActivity"
             android:exported="false" />
         <activity
@@ -31,9 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Main Activity -->
-        <activity
-            android:name=".ui.MainActivity"
-            android:exported="false" /> <!-- Add/Edit Employee -->
         <activity
             android:name=".ui.AddEditEmployeeActivity"
             android:exported="false" /> <!-- Employee Detail -->

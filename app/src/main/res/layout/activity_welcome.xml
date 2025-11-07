@@ -93,7 +93,7 @@
 
     <!-- Continue without account -->
     <TextView
-        android:id="@+id/tvSkip"
+        android:id="@+id/btnContinue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/continue_without_account"
