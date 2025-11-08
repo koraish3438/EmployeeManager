@@ -50,6 +50,7 @@
         android:id="@+id/navigationView"
         android:layout_width="280dp"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="@color/white"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"/>
