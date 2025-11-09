@@ -27,7 +27,8 @@
 
         <activity
             android:name=".registration.WelcomeActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:theme="@style/Theme.EmployeeManagementApp"/>
 
         <!-- Splash Screen -->
         <activity

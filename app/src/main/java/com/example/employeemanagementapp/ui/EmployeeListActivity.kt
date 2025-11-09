@@ -3,6 +3,7 @@ package com.example.employeemanagementapp.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -48,9 +49,8 @@ class EmployeeListActivity : AppCompatActivity() {
 
         // Toolbar
         setSupportActionBar(binding.topAppBar)
-        binding.topAppBar.setNavigationOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24) // hamburger icon
 
         // Navigation drawer menu clicks
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -83,6 +83,17 @@ class EmployeeListActivity : AppCompatActivity() {
             viewModel.employees.collectLatest { list ->
                 adapter.submitList(list)
             }
+        }
+    }
+
+    // Handle hamburger click
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                binding.drawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
