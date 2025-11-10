@@ -75,7 +75,8 @@ class EmployeeListActivity : AppCompatActivity() {
 
         // Floating action button
         binding.fabAdd.setOnClickListener {
-            startActivity(Intent(this, AddEditEmployeeActivity::class.java))
+            val intent = Intent(this, AddEditEmployeeActivity::class.java)
+            startActivity(intent)
         }
 
         // Observe StateFlow
