@@ -1,6 +1,5 @@
 package com.example.employeemanagementapp.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -32,7 +31,7 @@ class EmployeeListActivity : AppCompatActivity() {
 
         // Retrieve userName from intent or SharedPreferences
         userName = intent.getStringExtra("userName") ?: run {
-            val sharedPref = getSharedPreferences("MyAppPref", Context.MODE_PRIVATE)
+            val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
             sharedPref.getString("name", "Guest") ?: "Guest"
         }
 
@@ -42,10 +41,7 @@ class EmployeeListActivity : AppCompatActivity() {
         tvUserName.text = userName
 
         // ViewModel
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[EmployeeViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))[EmployeeViewModel::class.java]
 
         // Toolbar
         setSupportActionBar(binding.topAppBar)
