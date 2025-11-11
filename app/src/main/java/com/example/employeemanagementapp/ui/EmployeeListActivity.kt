@@ -6,14 +6,15 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.Employee
 import com.example.employeemanagementapp.databinding.ActivityEmployeeListBinding
 import com.example.employeemanagementapp.registration.WelcomeActivity
 import com.example.employeemanagementapp.viewmodel.EmployeeViewModel
+import com.example.employeemanagementapp.viewmodel.EmployeeViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,7 @@ class EmployeeListActivity : AppCompatActivity() {
     private lateinit var adapter: EmployeeAdapter
     private lateinit var viewModel: EmployeeViewModel
     private var userName: String = "Guest"
+    private var currentUserId: String = "GUEST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,18 +37,24 @@ class EmployeeListActivity : AppCompatActivity() {
             sharedPref.getString("name", "Guest") ?: "Guest"
         }
 
+        val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
+        currentUserId = if(userName == "Guest") "GUEST" else sharedPref.getString("email", "") ?: "GUEST"
+
         // Update Drawer header TextView
         val headerView = binding.navigationView.getHeaderView(0)
         val tvUserName = headerView.findViewById<TextView>(R.id.tvUserName)
         tvUserName.text = userName
 
-        // ViewModel
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))[EmployeeViewModel::class.java]
+        // ViewModel with Factory
+        viewModel = ViewModelProvider(
+            this,
+            EmployeeViewModelFactory(application, currentUserId)
+        )[EmployeeViewModel::class.java]
 
         // Toolbar
         setSupportActionBar(binding.topAppBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24) // hamburger icon
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
 
         // Navigation drawer menu clicks
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -60,19 +68,28 @@ class EmployeeListActivity : AppCompatActivity() {
             true
         }
 
-        // RecyclerView
+        // RecyclerView Adapter
         adapter = EmployeeAdapter(
             onItemClick = { employee -> openEmployeeDetail(employee) },
-            onEditClick = { employee -> editEmployee(employee) },
-            onDeleteClick = { employee -> deleteEmployee(employee) }
+            onEditClick = { employee ->
+                if(currentUserId != "GUEST") editEmployee(employee)
+            },
+            onDeleteClick = { employee ->
+                if(currentUserId != "GUEST") deleteEmployee(employee)
+            }
         )
         binding.rvEmployees.layoutManager = LinearLayoutManager(this)
         binding.rvEmployees.adapter = adapter
 
-        // Floating action button
-        binding.fabAdd.setOnClickListener {
-            val intent = Intent(this, AddEditEmployeeActivity::class.java)
-            startActivity(intent)
+        // FloatingActionButton hide for Guest
+        if(currentUserId == "GUEST") {
+            binding.fabAdd.hide()
+        } else {
+            binding.fabAdd.show()
+            binding.fabAdd.setOnClickListener {
+                val intent = Intent(this, AddEditEmployeeActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         // Observe StateFlow
