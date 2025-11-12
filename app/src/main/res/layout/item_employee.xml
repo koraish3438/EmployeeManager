@@ -1,58 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/imgProfile"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/outline_person_24"
-        android:contentDescription="@string/profile_pic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/circle_background"
-        android:padding="4dp"/>
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/employee_name"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@id/imgProfile"
-        app:layout_constraintTop_toTopOf="@id/imgProfile"
-        app:layout_constraintEnd_toStartOf="@id/btnMore"
-        android:layout_marginStart="12dp"/>
+        android:padding="12dp">
 
-    <TextView
-        android:id="@+id/tvDepartment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/department"
-        android:textColor="#666"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@id/tvName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/tvName"
-        app:layout_constraintTop_toBottomOf="@id/tvName" />
+        <!-- Edit Icon -->
+        <ImageView
+            android:id="@+id/ivEdit"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/baseline_edit_24"
+            app:tint="@color/black"
+            app:contentDescription="Edit" />
 
-    <ImageButton
-        android:id="@+id/btnMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/outline_more_vert_24"
-        android:contentDescription="@string/more_options"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        <!-- Profile Photo -->
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_below="@id/ivEdit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/outline_person_24"
+            android:scaleType="centerCrop"
+            app:contentDescription="Profile Photo"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Name -->
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivProfile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:text="@string/name"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <!-- Department -->
+        <TextView
+            android:id="@+id/tvDepartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="@string/department"
+            android:textSize="14sp"
+            android:textColor="@color/black" />
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

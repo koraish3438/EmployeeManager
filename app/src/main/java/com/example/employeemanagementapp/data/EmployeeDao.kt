@@ -6,13 +6,14 @@ import androidx.room.*
 @Dao
 interface EmployeeDao {
 
-    // Existing LiveData query (can be used by UI if desired)
-    @Query("SELECT * FROM employees ORDER BY name ASC")
-    fun getAll(): LiveData<List<Employee>>
+    @Query("SELECT * FROM employees WHERE userId = :userId ORDER BY name ASC")
+    fun getAllForUser(userId: String): LiveData<List<Employee>>
 
-    // New suspend function to get list (used by repository for synchronous suspend access)
-    @Query("SELECT * FROM employees ORDER BY name ASC")
-    suspend fun getAllList(): List<Employee>
+    @Query("SELECT * FROM employees WHERE userId = :userId ORDER BY name ASC")
+    suspend fun getAllListForUser(userId: String): List<Employee>
+
+    @Query("SELECT * FROM employees WHERE (name LIKE '%' || :query || '%' OR department LIKE '%' || :query || '%') AND userId = :userId ORDER BY name ASC")
+    fun search(query: String, userId: String): LiveData<List<Employee>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(employee: Employee): Long
@@ -23,9 +24,6 @@ interface EmployeeDao {
     @Delete
     suspend fun delete(employee: Employee)
 
-    @Query("SELECT * FROM employees WHERE id = :id LIMIT 1")
-    suspend fun getById(id: Int): Employee?
-
-    @Query("SELECT * FROM employees WHERE name LIKE '%' || :query || '%' OR department LIKE '%' || :query || '%' ORDER BY name ASC")
-    fun search(query: String): LiveData<List<Employee>>
+    @Query("SELECT * FROM employees WHERE id = :id AND userId = :userId LIMIT 1")
+    suspend fun getByIdForUser(id: Int, userId: String): Employee?
 }

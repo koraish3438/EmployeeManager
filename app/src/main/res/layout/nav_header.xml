@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="?attr/colorPrimaryContainer"
     android:orientation="vertical"
     android:gravity="bottom"
     android:padding="16dp">
@@ -13,6 +12,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:src="@drawable/outline_person_24"
+        android:tint="@color/white"
         android:contentDescription="@string/profile_pic"/>
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="@string/guest"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_marginTop="8dp"/>
 
@@ -30,6 +30,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="14sp"/>
 </LinearLayout>

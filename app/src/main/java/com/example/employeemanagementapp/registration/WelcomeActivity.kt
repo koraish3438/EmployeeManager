@@ -21,7 +21,6 @@ class WelcomeActivity : AppCompatActivity() {
         // Lottie Animation setup
         binding.welcomeAnim.apply {
             setAnimation(R.raw.businessman)
-            loop(true)
             playAnimation()
         }
 

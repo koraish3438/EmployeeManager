@@ -22,16 +22,22 @@
             android:title="@string/app_name"
             android:titleTextColor="@color/white"
             app:navigationIcon="@drawable/baseline_menu_24"
-            app:menu="@menu/nav_menu"/>
+            app:navigationIconTint="@color/white"
+            app:menu="@menu/nav_menu" />
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEmployees"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
-            tools:listitem="@layout/item_employee"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:layout_marginTop="?attr/actionBarSize"
+            android:padding="12dp"
+            android:background="@color/white"
+            android:clipToPadding="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@id/topAppBar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_employee" />
 
         <!-- Floating Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -50,8 +56,11 @@
         android:id="@+id/navigationView"
         android:layout_width="280dp"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"/>
+        app:menu="@menu/nav_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
