@@ -13,7 +13,8 @@
         android:layout_height="64dp"
         android:src="@drawable/outline_person_24"
         android:tint="@color/white"
-        android:contentDescription="@string/profile_pic"/>
+        android:contentDescription="@string/profile_pic"
+        />
 
     <TextView
         android:id="@+id/tvUserName"
