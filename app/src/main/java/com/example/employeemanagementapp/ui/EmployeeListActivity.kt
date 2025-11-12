@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.Employee
 import com.example.employeemanagementapp.databinding.ActivityEmployeeListBinding
@@ -78,7 +79,7 @@ class EmployeeListActivity : AppCompatActivity() {
                 if(currentUserId != "GUEST") deleteEmployee(employee)
             }
         )
-        binding.rvEmployees.layoutManager = LinearLayoutManager(this)
+        binding.rvEmployees.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.rvEmployees.adapter = adapter
 
         // FloatingActionButton hide for Guest
