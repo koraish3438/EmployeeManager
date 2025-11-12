@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.Employee
@@ -24,6 +24,7 @@ class EmployeeListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeeListBinding
     private lateinit var adapter: EmployeeAdapter
     private lateinit var viewModel: EmployeeViewModel
+
     private var userName: String = "Guest"
     private var currentUserId: String = "GUEST"
 
@@ -32,95 +33,102 @@ class EmployeeListActivity : AppCompatActivity() {
         binding = ActivityEmployeeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrieve userName from intent or SharedPreferences
-        userName = intent.getStringExtra("userName") ?: run {
-            val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
-            sharedPref.getString("name", "Guest") ?: "Guest"
-        }
-
         val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
-        currentUserId = if(userName == "Guest") "GUEST" else sharedPref.getString("email", "") ?: "GUEST"
 
-        // Update Drawer header TextView
+        // Fetch USER_ID and name
+        currentUserId = intent.getStringExtra("USER_ID")
+            ?: sharedPref.getString("USER_ID", "GUEST") ?: "GUEST"
+
+        userName = intent.getStringExtra("userName")
+            ?: sharedPref.getString("name", if (currentUserId == "GUEST") "Guest" else "User") ?: "Guest"
+
+        val userEmail = sharedPref.getString("email", "")
+
+        // Drawer header update
         val headerView = binding.navigationView.getHeaderView(0)
         val tvUserName = headerView.findViewById<TextView>(R.id.tvUserName)
+        val tvUserEmail = headerView.findViewById<TextView>(R.id.tvUserEmail)
         tvUserName.text = userName
+        tvUserEmail.text = if (currentUserId != "GUEST") userEmail else ""
 
-        // ViewModel with Factory
+        // ViewModel
         viewModel = ViewModelProvider(
             this,
             EmployeeViewModelFactory(application, currentUserId)
         )[EmployeeViewModel::class.java]
 
-        // Toolbar
-        setSupportActionBar(binding.topAppBar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
-
-        // Navigation drawer menu clicks
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_home -> { /* TODO */ }
-                R.id.menu_profile -> { /* TODO */ }
-                R.id.menu_settings -> { /* TODO */ }
-                R.id.menu_logout -> { logout() }
-            }
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        }
-
         // RecyclerView Adapter
         adapter = EmployeeAdapter(
-            onItemClick = { employee -> openEmployeeDetail(employee) },
-            onEditClick = { employee ->
-                if(currentUserId != "GUEST") editEmployee(employee)
+            currentUserId = currentUserId,
+            onItemClick = { emp -> openEmployeeDetail(emp) },
+            onEditClick = { emp ->
+                if (currentUserId == "GUEST") showLoginPrompt()
+                else editEmployee(emp)
             },
-            onDeleteClick = { employee ->
-                if(currentUserId != "GUEST") deleteEmployee(employee)
+            onDeleteClick = { emp ->
+                if (currentUserId == "GUEST") showLoginPrompt()
+                else deleteEmployee(emp)
             }
         )
-        binding.rvEmployees.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+
+        binding.rvEmployees.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.rvEmployees.adapter = adapter
 
-        // FloatingActionButton hide for Guest
-        if(currentUserId == "GUEST") {
-            binding.fabAdd.hide()
-        } else {
-            binding.fabAdd.show()
-            binding.fabAdd.setOnClickListener {
+        // FAB
+        binding.fabAdd.setOnClickListener {
+            if (currentUserId == "GUEST") showLoginPrompt()
+            else {
                 val intent = Intent(this, AddEditEmployeeActivity::class.java)
+                intent.putExtra("USER_ID", currentUserId)
                 startActivity(intent)
             }
         }
 
-        // Observe StateFlow
+        // Observe employees
         lifecycleScope.launch {
             viewModel.employees.collectLatest { list ->
                 adapter.submitList(list)
             }
         }
+
+        // Navigation drawer
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_home -> { /* TODO */ }
+                R.id.menu_profile -> { /* TODO */ }
+                R.id.menu_settings -> { /* TODO */ }
+                R.id.menu_logout -> logout()
+            }
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
+        // Toolbar
+        setSupportActionBar(binding.topAppBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
     }
 
-    // Handle hamburger click
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                binding.drawerLayout.openDrawer(GravityCompat.START)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    private fun showLoginPrompt() {
+        Toast.makeText(
+            this,
+            "Please log in or sign up to perform this action",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun openEmployeeDetail(employee: Employee) {
         val intent = Intent(this, EmployeeDetailActivity::class.java)
         intent.putExtra("EMPLOYEE_ID", employee.id)
+        intent.putExtra("USER_ID", currentUserId)
         startActivity(intent)
     }
 
     private fun editEmployee(employee: Employee) {
         val intent = Intent(this, AddEditEmployeeActivity::class.java)
         intent.putExtra("EMPLOYEE_ID", employee.id)
+        intent.putExtra("USER_ID", currentUserId)
         startActivity(intent)
     }
 
@@ -133,5 +141,15 @@ class EmployeeListActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                binding.drawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

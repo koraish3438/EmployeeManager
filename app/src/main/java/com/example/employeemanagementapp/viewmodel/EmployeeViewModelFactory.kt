@@ -8,6 +8,7 @@ class EmployeeViewModelFactory(
     private val application: Application,
     private val currentUserId: String
 ) : ViewModelProvider.Factory {
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EmployeeViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

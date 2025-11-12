@@ -25,15 +25,21 @@ class LoginActivity : AppCompatActivity() {
 
             if (!validateInput(email, password)) return@setOnClickListener
 
-            // Check SharedPreferences
             val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
             val savedEmail = sharedPref.getString("email", "")
             val savedPass = sharedPref.getString("pass", "")
             val savedName = sharedPref.getString("name", "Guest")
+            var savedUserId = sharedPref.getString("USER_ID", "GUEST")
 
             if (email == savedEmail && password == savedPass) {
+                if (savedUserId == "GUEST") {
+                    savedUserId = "USER_${System.currentTimeMillis()}"
+                    sharedPref.edit().putString("USER_ID", savedUserId).apply()
+                }
+
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, EmployeeListActivity::class.java)
+                intent.putExtra("USER_ID", savedUserId)
                 intent.putExtra("userName", savedName)
                 startActivity(intent)
                 finish()

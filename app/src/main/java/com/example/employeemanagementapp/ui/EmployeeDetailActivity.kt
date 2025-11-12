@@ -9,16 +9,19 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.Employee
-import com.example.employeemanagementapp.data.EmployeeDatabase
 import com.example.employeemanagementapp.databinding.ActivityEmployeeDetailBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.employeemanagementapp.viewmodel.EmployeeViewModel
+import com.example.employeemanagementapp.viewmodel.EmployeeViewModelFactory
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 class EmployeeDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEmployeeDetailBinding
     private var employeeId: Int = -1
+    private var currentUserId: String = "GUEST"
+    private lateinit var viewModel: EmployeeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,28 +30,21 @@ class EmployeeDetailActivity : AppCompatActivity() {
         binding = ActivityEmployeeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // WindowInsets padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Get Employee ID from intent
-        employeeId = intent.getIntExtra("EMPLOYEE_ID", -1)
-        if (employeeId != -1) {
-            loadEmployeeDetails(employeeId)
-        }
-    }
+        currentUserId = intent.getStringExtra("USER_ID") ?: "GUEST"
+        val factory = EmployeeViewModelFactory(application, currentUserId)
+        viewModel = ViewModelProvider(this, factory)[EmployeeViewModel::class.java]
 
-    private fun loadEmployeeDetails(id: Int) {
-        val dao = EmployeeDatabase.getDatabase(applicationContext).employeeDao()
-        CoroutineScope(Dispatchers.IO).launch {
-            val employee: Employee? = dao.getById(id)
-            employee?.let {
-                runOnUiThread {
-                    bindEmployeeData(it)
-                }
+        employeeId = intent.getIntExtra("EMPLOYEE_ID",-1)
+        if(employeeId != -1) {
+            lifecycleScope.launch {
+                val emp = viewModel.getEmployeeById(employeeId)
+                emp?.let { bindEmployeeData(it) }
             }
         }
     }
@@ -59,8 +55,7 @@ class EmployeeDetailActivity : AppCompatActivity() {
         binding.tvEmail.text = emp.email
         binding.tvPhone.text = emp.phone
 
-        // Profile image
-        if (!emp.imageUri.isNullOrEmpty()) {
+        if(!emp.imageUri.isNullOrEmpty()) {
             binding.imgProfile.load(emp.imageUri) {
                 placeholder(R.drawable.outline_person_24)
                 error(R.drawable.outline_person_24)

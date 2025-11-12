@@ -18,5 +18,4 @@ class EmployeeRepository(private val application: Application) {
 
     fun getAllLiveData(userId: String) = dao.getAllForUser(userId)
     fun searchLiveData(query: String, userId: String) = dao.search(query, userId)
-
 }

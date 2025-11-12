@@ -27,17 +27,19 @@ class SignupActivity : AppCompatActivity() {
 
             if (!validateInput(name, email, password, confirmPassword)) return@setOnClickListener
 
-            // Save to SharedPreferences
             val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
+            val newUserId = "USER_${System.currentTimeMillis()}"
             sharedPref.edit().apply {
                 putString("name", name)
                 putString("email", email)
                 putString("pass", password)
+                putString("USER_ID", newUserId)
                 apply()
             }
 
             Toast.makeText(this, "Sign Up Successful!", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, EmployeeListActivity::class.java)
+            intent.putExtra("USER_ID", newUserId)
             intent.putExtra("userName", name)
             startActivity(intent)
             finish()

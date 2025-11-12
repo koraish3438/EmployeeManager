@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel(application: Application, private val userId: String) : AndroidViewModel(application) {
+class EmployeeViewModel(application: Application, val currentUserId: String) : AndroidViewModel(application) {
 
     private val repository = EmployeeRepository(application)
     private val _employees = MutableStateFlow<List<Employee>>(emptyList())
@@ -19,21 +19,21 @@ class EmployeeViewModel(application: Application, private val userId: String) : 
 
     private fun refreshEmployees() {
         viewModelScope.launch {
-            _employees.value = repository.getAllEmployees(userId)
+            _employees.value = repository.getAllEmployees(currentUserId)
         }
     }
 
     fun addEmployee(employee: Employee) {
-        if(userId == "GUEST") return // guest cannot add
+        if(currentUserId == "GUEST") return
         viewModelScope.launch {
-            employee.userId = userId
+            employee.userId = currentUserId
             repository.addEmployee(employee)
             refreshEmployees()
         }
     }
 
     fun updateEmployee(employee: Employee) {
-        if(userId == "GUEST") return
+        if(currentUserId == "GUEST") return
         viewModelScope.launch {
             repository.updateEmployee(employee)
             refreshEmployees()
@@ -41,7 +41,7 @@ class EmployeeViewModel(application: Application, private val userId: String) : 
     }
 
     fun deleteEmployee(employee: Employee) {
-        if(userId == "GUEST") return
+        if(currentUserId == "GUEST") return
         viewModelScope.launch {
             repository.deleteEmployee(employee)
             refreshEmployees()
@@ -49,7 +49,6 @@ class EmployeeViewModel(application: Application, private val userId: String) : 
     }
 
     suspend fun getEmployeeById(id: Int): Employee? {
-        return repository.getById(id, userId)
+        return repository.getById(id, currentUserId)
     }
 }
-
