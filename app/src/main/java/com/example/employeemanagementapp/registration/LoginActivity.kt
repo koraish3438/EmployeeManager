@@ -26,25 +26,24 @@ class LoginActivity : AppCompatActivity() {
             if (!validateInput(email, password)) return@setOnClickListener
 
             val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
-            val savedEmail = sharedPref.getString("email", "")
-            val savedPass = sharedPref.getString("pass", "")
-            val savedName = sharedPref.getString("name", "Guest")
-            var savedUserId = sharedPref.getString("USER_ID", "GUEST")
 
-            if (email == savedEmail && password == savedPass) {
-                if (savedUserId == "GUEST") {
-                    savedUserId = "USER_${System.currentTimeMillis()}"
-                    sharedPref.edit().putString("USER_ID", savedUserId).apply()
+            // Retrieving the saved password based on the email
+            val savedPass = sharedPref.getString("user_${email}_pass", null)
+            val savedName = sharedPref.getString("user_${email}_name", "Guest")
+
+            if (savedPass != null && password == savedPass) {
+                // If login is successful, save this user's email to currentLoggedInEmail
+                sharedPref.edit().apply {
+                    putString("currentLoggedInEmail", email)
+                    putBoolean("isLoggedIn", true)
+                    apply()
                 }
 
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, EmployeeListActivity::class.java)
-                intent.putExtra("USER_ID", savedUserId)
-                intent.putExtra("userName", savedName)
-                startActivity(intent)
+                Toast.makeText(this, "Login Successful as $savedName", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, EmployeeListActivity::class.java))
                 finish()
             } else {
-                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid credentials or User not registered.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -60,24 +59,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validateInput(email: String, password: String): Boolean {
-        when {
+        return when {
             email.isEmpty() -> {
                 Toast.makeText(this, "Email required", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             password.isEmpty() -> {
                 Toast.makeText(this, "Password required", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             password.length < 8 -> {
                 Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
-            else -> return true
+            else -> true
         }
     }
 }

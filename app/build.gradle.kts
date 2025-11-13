@@ -79,4 +79,13 @@ dependencies {
 
     //airbnb
     implementation("com.airbnb.android:lottie:6.1.0")
+
+    // Core Coroutines Library (Usually already included, but good to check)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+
+    // ViewModel Scope KTX (CRUCIAL for viewModelScope and stateIn)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+
+    // Lifecycle Runtime KTX (For flow utilities like SharingStarted)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 }

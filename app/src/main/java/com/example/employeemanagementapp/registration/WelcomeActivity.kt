@@ -14,29 +14,34 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        // ViewBinding setup
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Lottie Animation setup
-        binding.welcomeAnim.apply {
-            setAnimation(R.raw.businessman)
-            playAnimation()
+        // Check login state
+        val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
+        val isLoggedIn = sharedPref.getBoolean("isLoggedIn", false)
+        if (isLoggedIn) {
+            startActivity(Intent(this, EmployeeListActivity::class.java))
+            finish()
+            return
         }
 
-        // Sign Up Button click
+        // Lottie Animation
+        binding.welcomeAnim.setAnimation(R.raw.businessman)
+        binding.welcomeAnim.playAnimation()
+
+        // Sign Up Button
         binding.btnSignUp.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, SignupActivity::class.java))
         }
 
-        // Login Button click
+        // Login Button
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // Skip TextView click
+        // Guest Continue
         binding.btnContinue.setOnClickListener {
             val intent = Intent(this, EmployeeListActivity::class.java)
             intent.putExtra("userName", "Guest")

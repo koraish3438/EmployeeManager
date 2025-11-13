@@ -11,7 +11,7 @@
     <View
         android:id="@+id/topBg"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="350dp"
         android:background="@drawable/bg_welcome_curve"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,7 +22,7 @@
         android:id="@+id/welcomeAnim"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="96dp"
         android:text="@string/employee_manager"
         android:textColor="@color/black"
         android:textSize="28sp"

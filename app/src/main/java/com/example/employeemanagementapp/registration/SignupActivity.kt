@@ -28,19 +28,30 @@ class SignupActivity : AppCompatActivity() {
             if (!validateInput(name, email, password, confirmPassword)) return@setOnClickListener
 
             val sharedPref = getSharedPreferences("MyAppPref", MODE_PRIVATE)
-            val newUserId = "USER_${System.currentTimeMillis()}"
+
+            // Checking if the user already exists
+            val users = sharedPref.getStringSet("userEmails", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+
+            if (users.contains(email)) {
+                Toast.makeText(this, "Account with this email already exists. Please Login.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // Saving new user data using email as part of the key
             sharedPref.edit().apply {
-                putString("name", name)
-                putString("email", email)
-                putString("pass", password)
-                putString("USER_ID", newUserId)
+                putString("user_${email}_name", name)
+                putString("user_${email}_pass", password)
+                users.add(email)
+                putStringSet("userEmails", users)
+
+                // Automatically logging in after successful sign-up
+                putString("currentLoggedInEmail", email) // Saving the email of the currently logged-in user
+                putBoolean("isLoggedIn", true)
                 apply()
             }
 
-            Toast.makeText(this, "Sign Up Successful!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Sign Up Successful! Logged in as $name", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, EmployeeListActivity::class.java)
-            intent.putExtra("USER_ID", newUserId)
-            intent.putExtra("userName", name)
             startActivity(intent)
             finish()
         }
@@ -57,24 +68,24 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun validateInput(name: String, email: String, password: String, confirmPassword: String): Boolean {
-        when {
+        return when {
             name.isEmpty() -> {
                 Toast.makeText(this, "Name required", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 Toast.makeText(this, "Valid email required", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             password.length < 8 -> {
                 Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
             password != confirmPassword -> {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                return false
+                false
             }
-            else -> return true
+            else -> true
         }
     }
 }
