@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -141,6 +142,7 @@ class EmployeeListActivity : AppCompatActivity() {
 
     private fun deleteEmployee(employee: Employee) {
         viewModel.deleteEmployee(employee)
+        Toast.makeText(this, "Employee deleted", Toast.LENGTH_SHORT).show()
     }
 
     private fun logout() {
