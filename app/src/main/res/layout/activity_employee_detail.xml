@@ -13,12 +13,13 @@
         android:layout_height="wrap_content"
         android:paddingBottom="16dp">
 
+        <!-- Header Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clEmployeeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="24dp"
             android:background="@android:color/white"
+            android:paddingBottom="24dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,13 +37,12 @@
                     app:tint="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:contentDescription="Back Button" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Developer"
+                    android:text="Employee Details"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -59,8 +59,7 @@
                     app:tint="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:contentDescription="@string/add_employee" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
@@ -71,9 +70,9 @@
                 android:src="@drawable/outline_person_24"
                 android:scaleType="centerCrop"
                 android:background="@drawable/circle_shadow"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/clTopBarDetails" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/clTopBarDetails" />
 
             <TextView
                 android:id="@+id/tvNameDetails"
@@ -84,7 +83,6 @@
                 android:textSize="22sp"
                 android:textColor="#000000"
                 android:layout_marginTop="12dp"
-                android:textAlignment="center"
                 app:layout_constraintTop_toBottomOf="@id/imgProfileDetails"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -103,70 +101,57 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Stats Section -->
         <TextView
             android:id="@+id/tvStatsHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stats"
             android:textColor="#000000"
-            android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
+            android:textSize="18sp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/clEmployeeHeader" />
+            app:layout_constraintTop_toBottomOf="@id/clEmployeeHeader"/>
 
         <LinearLayout
             android:id="@+id/llStats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:paddingHorizontal="16dp"
             android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/tvStatsHeader">
 
-            <include layout="@layout/card_stat_item"
-                android:id="@+id/statLikes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"/>
+            <include layout="@layout/card_stat_item" android:id="@+id/statLikes"/>
+            <include layout="@layout/card_stat_item" android:id="@+id/statThanks"/>
+            <include layout="@layout/card_stat_item" android:id="@+id/statCredits"/>
 
-            <include layout="@layout/card_stat_item"
-                android:id="@+id/statThanks"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="4dp"/>
-
-            <include layout="@layout/card_stat_item"
-                android:id="@+id/statCredits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"/>
         </LinearLayout>
 
+        <!-- Last Updates Section -->
         <TextView
             android:id="@+id/tvLastUpdatesHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Last Updates"
             android:textColor="#000000"
-            android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
+            android:textSize="18sp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llStats" />
+            app:layout_constraintTop_toBottomOf="@id/llStats"/>
 
+        <!-- General Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardGeneral"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:layout_constraintTop_toBottomOf="@id/tvLastUpdatesHeader">
@@ -175,33 +160,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#E8F0F7">
+                android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/tvCardGeneralContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="General"
+                    android:text="General Update"
                     android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Sam Smith done great job when meeting newcomers in the office yesterday. Im proud of him"
-                    android:textColor="#424242"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
+        <!-- Attitude Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardAttitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:layout_constraintTop_toBottomOf="@id/cardGeneral">
@@ -210,26 +188,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#E8F0F7">
+                android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/tvCardAttitudeContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attitude"
+                    android:text="Attitude Update"
                     android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Sam Smith took the extra effort to help me with my project last week. He’s five star teamlead!"
-                    android:textColor="#424242"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>

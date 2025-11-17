@@ -33,10 +33,14 @@ class EmployeeAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(emp: Employee) {
-            binding.tvName.text = emp.name ?: "No Name"
-            binding.tvDepartment.text = emp.department ?: "No Department"
+            // Name
+            binding.tvName.text = emp.name
 
-            val imageUri = emp.imageUri
+            // Role as department (optional: replace with actual department name via lookup)
+            binding.tvDepartment.text = emp.role
+
+            // Profile image
+            val imageUri = emp.profileUrl
             if (!imageUri.isNullOrEmpty()) {
                 binding.ivProfile.load(imageUri) {
                     placeholder(R.drawable.outline_person_24)
@@ -47,6 +51,7 @@ class EmployeeAdapter(
                 binding.ivProfile.setImageResource(R.drawable.outline_person_24)
             }
 
+            // Click listeners
             binding.root.setOnClickListener { onItemClick(emp) }
             binding.ivEdit.setOnClickListener { onEditClick(emp) }
             binding.root.setOnLongClickListener {

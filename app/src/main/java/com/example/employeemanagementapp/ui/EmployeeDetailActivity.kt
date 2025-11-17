@@ -1,12 +1,9 @@
 package com.example.employeemanagementapp.ui
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.employeemanagementapp.R
@@ -14,77 +11,83 @@ import com.example.employeemanagementapp.data.Employee
 import com.example.employeemanagementapp.databinding.ActivityEmployeeDetailBinding
 import com.example.employeemanagementapp.viewmodel.EmployeeViewModel
 import com.example.employeemanagementapp.viewmodel.EmployeeViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EmployeeDetailActivity : AppCompatActivity() {
+class EmployeeDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEmployeeDetailBinding
     private lateinit var viewModel: EmployeeViewModel
-    private var employeeId: Int = -1
-    private var currentUserId: String = "GUEST"
+    private var employeeId: String? = null  // Pass employee ID via intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
         binding = ActivityEmployeeDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Get IDs from intent
-        employeeId = intent.getIntExtra("EMPLOYEE_ID", -1)
-        currentUserId = intent.getStringExtra("USER_ID") ?: "GUEST"
+        // Get employee ID from intent
+        employeeId = intent.getStringExtra("EMPLOYEE_ID")
+        val currentUserId = intent.getStringExtra("USER_ID") ?: "GUEST"
 
-        // Initialize ViewModel using the custom factory
-        viewModel = ViewModelProvider(
-            this,
-            EmployeeViewModelFactory(application, currentUserId)
-        )[EmployeeViewModel::class.java]
+        // Initialize ViewModel
+        val factory = EmployeeViewModelFactory(application, currentUserId)
+        viewModel = ViewModelProvider(this, factory)[EmployeeViewModel::class.java]
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        setupUI()
+        loadEmployeeData()
+    }
 
-        if (employeeId != -1) {
-            loadEmployeeDetails(employeeId)
-        }
-
-        binding.toBackAEP.setOnClickListener {
-            // Simply finish the current activity to return to the list
+    private fun setupUI() {
+        // Back button
+        binding.imgBack.setOnClickListener {
             finish()
         }
-    }
 
-    private fun loadEmployeeDetails(id: Int) {
-        // Fetch employee data from ViewModel
-        lifecycleScope.launch {
-            val employee: Employee? = viewModel.getEmployeeById(id)
-
-            employee?.let {
-                runOnUiThread {
-                    bindEmployeeData(it)
-                }
-            }
+        // Add button → open AddEditEmployeeActivity
+        binding.imgAdd.setOnClickListener {
+            val intent = Intent(this, AddEditEmployeeActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    private fun bindEmployeeData(emp: Employee) {
-        // Set data to TextViews
-        binding.tvName.text = emp.name
-        binding.tvDepartment.text = emp.department
-        binding.tvEmail.text = emp.email
-        binding.tvPhone.text = emp.phone
+    private fun loadEmployeeData() {
+        if (employeeId == null) return
 
-        // Load profile image
-        if (!emp.imageUri.isNullOrEmpty()) {
-            binding.imgProfile.load(emp.imageUri) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val employee: Employee? = viewModel.getEmployeeById(employeeId!!.toInt())
+            employee?.let { showEmployeeDetails(it) }
+        }
+    }
+
+    private fun showEmployeeDetails(employee: Employee) {
+        // Profile Image
+        if (employee.profileUrl.isNotEmpty()) {
+            binding.imgProfileDetails.load(employee.profileUrl) {
                 placeholder(R.drawable.outline_person_24)
                 error(R.drawable.outline_person_24)
                 transformations(CircleCropTransformation())
             }
         } else {
-            binding.imgProfile.setImageResource(R.drawable.outline_person_24)
+            binding.imgProfileDetails.setImageResource(R.drawable.outline_person_24)
         }
+
+        // Name & Role/Department
+        binding.tvNameDetails.text = employee.name
+        binding.tvRoleDetails.text = "${employee.role} | ${employee.departmentId}"
+
+        // Stats → For now, dummy numbers
+        binding.statLikes.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.tvStatValue)
+            .text = "24"
+        binding.statThanks.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.tvStatValue)
+            .text = "12"
+        binding.statCredits.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.tvStatValue)
+            .text = "5"
+
+        // Last Updates → For now static text from XML, can be dynamic later
+        binding.cardGeneral.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.tvCardContent)
+            .text = "Great work meeting newcomers yesterday."
+        binding.cardAttitude.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.tvCardContent)
+            .text = "Helped team members on project last week."
     }
 }

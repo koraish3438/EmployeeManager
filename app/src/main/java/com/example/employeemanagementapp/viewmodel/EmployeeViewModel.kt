@@ -21,35 +21,39 @@ class EmployeeViewModel(application: Application, private val userId: String) : 
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList<Employee>()
+                initialValue = emptyList()
             )
     } else {
-        flowOf<List<Employee>>(emptyList()).stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        flowOf(emptyList<Employee>()).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList()
+        )
     }
 
     fun addEmployee(employee: Employee) {
-        if(userId == "GUEST") return
+        if (userId == "GUEST") return
         viewModelScope.launch {
-            employee.userId = userId
+            // userId must be set at object creation, can't change val
             repository.addEmployee(employee)
         }
     }
 
     fun updateEmployee(employee: Employee) {
-        if(userId == "GUEST") return
+        if (userId == "GUEST") return
         viewModelScope.launch {
             repository.updateEmployee(employee)
         }
     }
 
     fun deleteEmployee(employee: Employee) {
-        if(userId == "GUEST") return
+        if (userId == "GUEST") return
         viewModelScope.launch {
             repository.deleteEmployee(employee)
         }
     }
 
     suspend fun getEmployeeById(id: Int): Employee? {
-        return repository.getById(id, userId)
+        return repository.getEmployeeById(id, userId)
     }
 }
