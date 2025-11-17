@@ -88,4 +88,6 @@ dependencies {
 
     // Lifecycle Runtime KTX (For flow utilities like SharingStarted)
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 }
