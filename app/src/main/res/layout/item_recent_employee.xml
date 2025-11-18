@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvEmployeeName"/>
 
     <ImageView
-        android:id="@+id/imgAction"
+        android:id="@+id/imgMore"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/outline_edit_square_24"

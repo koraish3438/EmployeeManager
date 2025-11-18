@@ -1,50 +1,56 @@
 package com.example.employeemanagementapp.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.CircleCropTransformation
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.RecentlyWorked
-import com.example.employeemanagementapp.databinding.ItemRecentEmployeeBinding
 
 class RecentlyWorkedAdapter(
     private val onItemClick: (RecentlyWorked) -> Unit
-) : ListAdapter<RecentlyWorked, RecentlyWorkedAdapter.RecentVH>(DiffCallback()) {
+) : ListAdapter<RecentlyWorked, RecentlyWorkedAdapter.RecentViewHolder>(RecentDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentVH {
-        val binding = ItemRecentEmployeeBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return RecentVH(binding)
-    }
-
-    override fun onBindViewHolder(holder: RecentVH, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    inner class RecentVH(private val binding: ItemRecentEmployeeBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class RecentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvName: TextView = itemView.findViewById(R.id.tvEmployeeName)
+        val tvRole: TextView = itemView.findViewById(R.id.tvEmployeeRole)
+        val imgProfile: ImageView = itemView.findViewById(R.id.imgEmployeeProfile)
+        val imgMore: ImageView? = itemView.findViewById(R.id.imgMore)
 
         fun bind(recent: RecentlyWorked) {
-            binding.tvEmployeeName.text = recent.employeeName ?: "No Name"
-            binding.tvEmployeeRole.text = recent.employeeRole ?: "No Role"
+            tvName.text = recent.employeeName
+            tvRole.text = recent.employeeRole
 
-            binding.imgEmployeeProfile.load(recent.employeeImageUri ?: "") {
-                placeholder(R.drawable.outline_person_24)
-                error(R.drawable.outline_person_24)
-                transformations(CircleCropTransformation())
+            // Ensure Click Listener handles null imgMore gracefully
+            // If imgMore exists, set listener on imgMore; otherwise, set on the whole item view
+            val clickableElement: View = imgMore ?: itemView
+
+            clickableElement.setOnClickListener {
+                onItemClick(recent)
             }
-
-            binding.root.setOnClickListener { onItemClick(recent) }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<RecentlyWorked>() {
-        override fun areItemsTheSame(oldItem: RecentlyWorked, newItem: RecentlyWorked) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: RecentlyWorked, newItem: RecentlyWorked) = oldItem == newItem
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recent_employee, parent, false)
+        return RecentViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: RecentViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    class RecentDiffCallback : DiffUtil.ItemCallback<RecentlyWorked>() {
+        override fun areItemsTheSame(oldItem: RecentlyWorked, newItem: RecentlyWorked): Boolean {
+            return oldItem.employeeId == newItem.employeeId
+        }
+
+        override fun areContentsTheSame(oldItem: RecentlyWorked, newItem: RecentlyWorked): Boolean {
+            return oldItem == newItem
+        }
     }
 }

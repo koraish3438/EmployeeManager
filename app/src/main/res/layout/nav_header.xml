@@ -8,12 +8,12 @@
     android:gravity="bottom"
     android:padding="16dp">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgUser"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/outline_person_24"
-        android:tint="@color/white"
+        android:src="@drawable/koraish1"
+        android:background="@drawable/circle_shadow"
         android:contentDescription="@string/profile_pic"
         />
 

@@ -48,7 +48,7 @@
 
         <!-- Employee Detail -->
         <activity
-            android:name=".ui.EmployeeDetailActivity"
+            android:name=".ui.EmployeeDetailsActivity"
             android:exported="false" />
     </application>
 

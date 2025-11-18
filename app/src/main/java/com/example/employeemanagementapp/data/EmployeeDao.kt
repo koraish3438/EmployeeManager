@@ -1,16 +1,19 @@
 package com.example.employeemanagementapp.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EmployeeDao {
 
+    @Query("SELECT * FROM employees WHERE id = :id LIMIT 1")
+    suspend fun getEmployeeById(id: String): Employee?
+
+    // **Fix:** return Flow instead of List
     @Query("SELECT * FROM employees WHERE userId = :userId")
     fun getAllForUser(userId: String): Flow<List<Employee>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(employee: Employee)
 
     @Update
@@ -20,9 +23,5 @@ interface EmployeeDao {
     suspend fun delete(employee: Employee)
 
     @Query("SELECT * FROM employees WHERE id = :id AND userId = :userId LIMIT 1")
-    suspend fun getByIdForUser(id: Int, userId: String): Employee?
-
-    @Query("SELECT * FROM employees WHERE name LIKE '%' || :query || '%' AND userId = :userId")
-    fun search(query: String, userId: String): Flow<List<Employee>>
+    suspend fun getByIdForUser(id: String, userId: String): Employee?
 }
-

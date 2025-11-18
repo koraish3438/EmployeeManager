@@ -5,8 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 class EmployeeRepository(application: Application) {
 
-    private val db = AppDatabase.getDatabase(application)
-
+    private val db = EmployeeDatabase.getDatabase(application)
     private val employeeDao = db.employeeDao()
     private val departmentDao = db.departmentDao()
     private val recentlyWorkedDao = db.recentlyWorkedDao()
@@ -22,10 +21,12 @@ class EmployeeRepository(application: Application) {
 
     suspend fun deleteEmployee(employee: Employee) = employeeDao.delete(employee)
 
-    suspend fun getEmployeeById(id: Int, userId: String): Employee? = employeeDao.getByIdForUser(id, userId)
+    // **Fix:** Use String ID instead of Int
+    suspend fun getEmployeeById(id: String, userId: String): Employee? =
+        employeeDao.getByIdForUser(id, userId)
 
-    fun searchEmployees(query: String, userId: String): Flow<List<Employee>> = employeeDao.search(query, userId)
-
+//    fun searchEmployees(query: String, userId: String): Flow<List<Employee>> =
+//        employeeDao.search(query, userId)
 
     // ===========================
     // Department functions
@@ -37,7 +38,6 @@ class EmployeeRepository(application: Application) {
     suspend fun updateDepartment(department: Department) = departmentDao.update(department)
 
     suspend fun deleteDepartment(department: Department) = departmentDao.delete(department)
-
 
     // ===========================
     // RecentlyWorked functions

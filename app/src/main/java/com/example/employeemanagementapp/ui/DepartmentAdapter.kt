@@ -1,50 +1,56 @@
 package com.example.employeemanagementapp.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
 import com.example.employeemanagementapp.R
 import com.example.employeemanagementapp.data.Department
-import com.example.employeemanagementapp.databinding.ItemDepartmentCardBinding
 
 class DepartmentAdapter(
     private val onItemClick: (Department) -> Unit
-) : ListAdapter<Department, DepartmentAdapter.DepartmentVH>(DiffCallback()) {
+) : ListAdapter<Department, DepartmentAdapter.DepartmentViewHolder>(DepartmentDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DepartmentVH {
-        val binding = ItemDepartmentCardBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return DepartmentVH(binding)
-    }
+    inner class DepartmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imgDepartmentIcon: ImageView = itemView.findViewById(R.id.imgDepartmentIcon)
+        val tvDepartmentName: TextView = itemView.findViewById(R.id.tvDepartmentName)
+        val tvTechieCount: TextView = itemView.findViewById(R.id.tvTechieCount)
 
-    override fun onBindViewHolder(holder: DepartmentVH, position: Int) {
-        holder.bind(getItem(position))
-    }
+        fun bind(department: Department) {
+            tvDepartmentName.text = department.name
 
-    inner class DepartmentVH(private val binding: ItemDepartmentCardBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            // আইকন রিসোর্স আইডি ব্যবহার করে ImageView সেট করা
+            imgDepartmentIcon.setImageResource(department.iconResId)
 
-        fun bind(dept: Department) {
-            binding.tvDepartmentName.text = dept.name ?: "No Name"
+            // টেকনিশিয়ান কাউন্ট সেট করা
+            tvTechieCount.text = "${department.techieCount} techies"
 
-            // Optional: department icon/image if available
-            binding.imgDepartmentIcon.load(dept.imageUri ?: "") {
-                placeholder(R.drawable.outline_person_24)
-                error(R.drawable.outline_person_24)
-                transformations(RoundedCornersTransformation(12f))
+            itemView.setOnClickListener {
+                onItemClick(department)
             }
-
-            binding.root.setOnClickListener { onItemClick(dept) }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<Department>() {
-        override fun areItemsTheSame(oldItem: Department, newItem: Department) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Department, newItem: Department) = oldItem == newItem
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DepartmentViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_department_card, parent, false)
+        return DepartmentViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: DepartmentViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
+
+    class DepartmentDiffCallback : DiffUtil.ItemCallback<Department>() {
+        override fun areItemsTheSame(oldItem: Department, newItem: Department): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Department, newItem: Department): Boolean {
+            return oldItem == newItem
+        }
     }
 }

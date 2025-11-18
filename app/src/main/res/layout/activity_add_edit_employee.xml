@@ -12,18 +12,16 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Top Toolbar with Back Button -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/backToolbar"
             android:layout_width="0dp"
             android:layout_height="46dp"
-            android:background="@color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
-                android:id="@+id/backLogin"
+                android:id="@+id/backAEP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/baseline_arrow_back_24"
@@ -31,7 +29,6 @@
                 app:tint="@color/black"/>
         </androidx.appcompat.widget.Toolbar>
 
-        <!-- Profile Image Picker -->
         <ImageView
             android:id="@+id/imgProfile"
             android:layout_width="120dp"
@@ -45,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Name Input -->
+        <!-- Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilName"
             android:layout_width="0dp"
@@ -65,7 +62,7 @@
                 android:inputType="textPersonName"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Department Input -->
+        <!-- Department -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilDepartment"
             android:layout_width="0dp"
@@ -85,14 +82,34 @@
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Email Input -->
+        <!-- Role -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilRole"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Role"
+            app:layout_constraintTop_toBottomOf="@id/tilDepartment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Email -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Email"
-            app:layout_constraintTop_toBottomOf="@id/tilDepartment"
+            app:layout_constraintTop_toBottomOf="@id/tilRole"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -105,7 +122,7 @@
                 android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Phone Input -->
+        <!-- Phone -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPhone"
             android:layout_width="0dp"
@@ -137,6 +154,5 @@
             app:layout_constraintTop_toBottomOf="@id/tilPhone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

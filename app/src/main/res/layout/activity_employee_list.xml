@@ -47,7 +47,7 @@
                 android:id="@+id/imgUserProfile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/outline_person_24"
+                android:src="@drawable/koraish"
                 android:background="@drawable/circle_shadow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tvToday"
@@ -139,39 +139,43 @@
 
         <LinearLayout
             android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:gravity="center"
             android:background="@drawable/bottom_nav_background"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Like"
                 android:src="@drawable/outline_thumb_up_24"
-                app:tint="@color/white"
-                android:contentDescription="Like" />
+                app:tint="@color/white" />
 
             <ImageButton
+                android:id="@+id/ibPerson"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/profile_pic"
                 android:src="@drawable/outline_person_24"
-                app:tint="@color/white"
-                android:contentDescription="@string/profile_pic" />
+                app:tint="@color/white" />
 
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu"
                 android:src="@drawable/baseline_menu_24"
-                app:tint="@color/white"
-                android:contentDescription="Menu" />
+                app:tint="@color/white" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

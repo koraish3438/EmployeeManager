@@ -10,5 +10,7 @@ data class RecentlyWorked(
     val lastWorkedDate: String,
     val employeeName: String? = null,
     val employeeRole: String? = null,
-    val employeeImageUri: String? = null
+    val employeeImageUri: String? = null,
+    val employeeEmail: String? = null,
+    val employeePhoneNumber: String? = null
 )

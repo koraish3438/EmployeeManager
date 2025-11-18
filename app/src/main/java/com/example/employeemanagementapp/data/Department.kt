@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class Department(
     @PrimaryKey val id: String,
     val name: String,
-    val imageUri: String? = null,
-    val iconUrl: String = ""           // Optional
+    val iconResId: Int, 
+    val techieCount: Int         // Optional
 )

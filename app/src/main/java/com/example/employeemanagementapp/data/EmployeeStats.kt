@@ -6,7 +6,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "employee_stats")
 data class EmployeeStats(
     @PrimaryKey val employeeId: String,
-    val likes: Int = 0,
-    val thanks: Int = 0,
-    val credits: Int = 0
+    val name: String,
+    val role: String,
+    val email: String,
+    val phoneNumber: String,
+    val likes: Int,
+    val thanks: Int,
+    val credits: Int
 )

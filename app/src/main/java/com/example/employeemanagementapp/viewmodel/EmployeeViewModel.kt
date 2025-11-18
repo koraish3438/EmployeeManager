@@ -4,56 +4,52 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.employeemanagementapp.data.Employee
-import com.example.employeemanagementapp.data.EmployeeRepository
-import kotlinx.coroutines.flow.SharingStarted
+import com.example.employeemanagementapp.data.EmployeeDao
+import com.example.employeemanagementapp.data.EmployeeDatabase
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class EmployeeViewModel(application: Application, private val userId: String) : AndroidViewModel(application) {
+class EmployeeViewModel(
+    application: Application,
+    private val currentUserId: String
+) : AndroidViewModel(application) {
 
-    private val repository = EmployeeRepository(application)
+    private val dao: EmployeeDao = EmployeeDatabase.getDatabase(application).employeeDao()
 
-    // Maps Repository's Flow to StateFlow with explicit type definitions
-    val employees: StateFlow<List<Employee>> = if (userId != "GUEST") {
-        repository.getAllEmployees(userId)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList()
-            )
-    } else {
-        flowOf(emptyList<Employee>()).stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = emptyList()
-        )
+    private val _employees = MutableStateFlow<List<Employee>>(emptyList())
+    val employees: StateFlow<List<Employee>> = _employees
+
+    init {
+        loadEmployees()
     }
 
-    fun addEmployee(employee: Employee) {
-        if (userId == "GUEST") return
+    private fun loadEmployees() {
         viewModelScope.launch {
-            // userId must be set at object creation, can't change val
-            repository.addEmployee(employee)
+            dao.getAllForUser(currentUserId).collect { list ->
+                _employees.value = list
+            }
         }
     }
 
-    fun updateEmployee(employee: Employee) {
-        if (userId == "GUEST") return
-        viewModelScope.launch {
-            repository.updateEmployee(employee)
-        }
+
+    fun addEmployee(emp: Employee) = viewModelScope.launch {
+        dao.insert(emp)
+        loadEmployees()
     }
 
-    fun deleteEmployee(employee: Employee) {
-        if (userId == "GUEST") return
-        viewModelScope.launch {
-            repository.deleteEmployee(employee)
-        }
+    fun updateEmployee(emp: Employee) = viewModelScope.launch {
+        dao.update(emp)
+        loadEmployees()
     }
 
-    suspend fun getEmployeeById(id: Int): Employee? {
-        return repository.getEmployeeById(id, userId)
+    fun deleteEmployee(emp: Employee) = viewModelScope.launch {
+        dao.delete(emp)
+        loadEmployees()
+    }
+
+    // Suspend function to get employee by String ID
+    suspend fun getEmployeeById(id: String): Employee? {
+        return dao.getEmployeeById(id)
     }
 }
