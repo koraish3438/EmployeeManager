@@ -23,10 +23,8 @@ class DepartmentAdapter(
         fun bind(department: Department) {
             tvDepartmentName.text = department.name
 
-            // আইকন রিসোর্স আইডি ব্যবহার করে ImageView সেট করা
             imgDepartmentIcon.setImageResource(department.iconResId)
 
-            // টেকনিশিয়ান কাউন্ট সেট করা
             tvTechieCount.text = "${department.techieCount} techies"
 
             itemView.setOnClickListener {

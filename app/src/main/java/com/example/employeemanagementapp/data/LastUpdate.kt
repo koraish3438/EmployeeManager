@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class LastUpdate(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val employeeId: String,
-    val title: String,         // e.g., "General" / "Attitude"
+    val title: String,
     val description: String
 )
