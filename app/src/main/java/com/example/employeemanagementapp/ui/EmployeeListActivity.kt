@@ -170,21 +170,21 @@ class EmployeeListActivity : AppCompatActivity() {
             val departments = listOf(
                 Department(
                     id = "1",
+                    name = "HR",
+                    iconResId = R.drawable.koraish1,
+                    techieCount = 20
+                ),
+                Department(
+                    id = "2",
                     name = "Development",
                     iconResId = R.drawable.jui,
                     techieCount = 88
                 ),
                 Department(
-                    id = "2",
+                    id = "3",
                     name = "Marketing",
                     iconResId = R.drawable.marketer,
                     techieCount = 45
-                ),
-                Department(
-                    id = "3",
-                    name = "HR",
-                    iconResId = R.drawable.koraish1,
-                    techieCount = 20
                 )
             )
             departmentAdapter.submitList(departments)
